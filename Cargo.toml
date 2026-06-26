@@ -2,5 +2,33 @@
 name = "neutron"
 version = "0.1.0"
 edition = "2021"
+authors = ["Your Name <you@example.com>"]
+description = "A high-performance, multi-threaded HTTP server engineered from scratch in Rust."
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+keywords = ["http", "server", "zero-copy", "networking", "multi-threaded"]
+categories = ["asynchronous", "network-programming", "web-programming::http-server"]
 
 [dependencies]
+# Performance & Zero-Copy Parsing
+httparse = "1.9"         # Lightning-fast, zero-copy HTTP/1.x request parsing
+bytes = "1.6"            # Highly efficient utilities for dealing with byte buffers
+
+# Optional Asynchronous Runtime Support
+tokio = { version = "1.38", features = ["full"], optional = true }
+futures-util = { version = "0.3", optional = true }
+
+# Utilities & Error Handling
+thiserror = "1.0"        # Clean, maintainable macro-based custom error types
+log = "0.4"              # Lightweight, standard logging API facades
+env_logger = "0.11"      # Simple logger implementation configured via environment variables
+
+[features]
+default = []
+async = ["dep:tokio", "dep:futures-util"] # Enables the asynchronous middleware/handler extension
+
+[profile.release]
+opt-level = 3            # Maximize binary optimizations
+lto = true               # Enable Link-Time Optimization for cross-crate speed
+codegen-units = 1        # Reduce parallel compilation blocks to maximize optimization
+panic = "abort"          # Strip stack unwinding code to reduce binary size and memory footprint
